@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>世界杯 32 强预测对阵图</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">World Cup Predictor</p>
+        <h1>世界杯 32 强预测对阵图 CHEESY！</h1>
+        <p class="hero-copy">从 32 强开始，自己拖拽或点击选择每场晋级球队，并保存多个不同的冠军预测版本。</p>
+      </div>
+      <button id="reset-board" class="secondary-btn" type="button">重置当前预测</button>
+    </header>
+
+    <main class="layout">
+      <section class="board-panel">
+        <div class="board-header">
+          <div>
+            <p class="section-kicker">Interactive Bracket</p>
+            <h2>世界杯淘汰赛对阵图</h2>
+          </div>
+          <div class="legend">
+            <span><i class="dot dot-ready"></i>可点击选择</span>
+            <span><i class="dot dot-drop"></i>可拖动放置</span>
+          </div>
+        </div>
+
+        <div class="bracket-layout">
+          <div class="side side-left">
+            <div class="round-column">
+              <h3>32 强</h3>
+              <div id="round-left-r32" class="round-stack"></div>
+            </div>
+            <div class="round-column">
+              <h3>16 强</h3>
+              <div id="round-left-r16" class="round-stack offset-r16"></div>
+            </div>
+            <div class="round-column">
+              <h3>8 强</h3>
+              <div id="round-left-qf" class="round-stack offset-qf"></div>
+            </div>
+            <div class="round-column">
+              <h3>半决赛</h3>
+              <div id="round-left-sf" class="round-stack offset-sf"></div>
+            </div>
+          </div>
+
+          <div class="center-column">
+            <div class="round-column center-match">
+              <h3>决赛</h3>
+              <div id="round-final" class="round-stack offset-final"></div>
+            </div>
+
+            <div class="champion-card">
+              <p class="champion-label">预测冠军</p>
+              <div id="champion-slot" class="champion-slot"></div>
+            </div>
+          </div>
+
+          <div class="side side-right">
+            <div class="round-column">
+              <h3>半决赛</h3>
+              <div id="round-right-sf" class="round-stack offset-sf"></div>
+            </div>
+            <div class="round-column">
+              <h3>8 强</h3>
+              <div id="round-right-qf" class="round-stack offset-qf"></div>
+            </div>
+            <div class="round-column">
+              <h3>16 强</h3>
+              <div id="round-right-r16" class="round-stack offset-r16"></div>
+            </div>
+            <div class="round-column">
+              <h3>32 强</h3>
+              <div id="round-right-r32" class="round-stack"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="save-panel">
+        <section class="save-box">
+          <p class="section-kicker">Save Scenario</p>
+          <h2>保存一个竞猜版本</h2>
+          <label for="scenario-name" class="input-label">方案名称</label>
+          <input id="scenario-name" class="scenario-input" type="text" maxlength="40" placeholder="例如：英格兰夺冠线">
+          <button id="save-scenario" class="primary-btn" type="button">保存当前结果</button>
+          <p id="current-summary" class="current-summary"></p>
+        </section>
+
+        <section class="saved-box">
+          <div class="saved-header">
+            <div>
+              <p class="section-kicker">Saved Picks</p>
+              <h2>已保存结果</h2>
+            </div>
+            <span id="saved-count" class="saved-count">0 个方案</span>
+          </div>
+          <div id="saved-scenarios" class="saved-list"></div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
