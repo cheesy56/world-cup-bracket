@@ -479,6 +479,14 @@ function persistScenarios() {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(state.savedScenarios[0])
+  }).then(async (response) => {
+    if (!response.ok) {
+      throw new Error("Failed to save scenario");
+    }
+
+    const savedScenario = await response.json();
+    state.savedScenarios[0] = savedScenario;
+    return savedScenario;
   });
 }
 
