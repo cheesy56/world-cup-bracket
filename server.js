@@ -2,19 +2,17 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const { URL } = require("url");
+const supabaseConfig = require("./supabase.config.js");
 
 const HOST = process.env.HOST || "0.0.0.0";
 const PORT = Number(process.env.PORT || 3000);
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, "data");
 const DATA_FILE = path.join(DATA_DIR, "scenarios.json");
-const SUPABASE_URL = process.env.SUPABASE_URL || "";
-const SUPABASE_KEY =
-  process.env.SUPABASE_SECRET_KEY ||
-  process.env.SUPABASE_SERVICE_ROLE_KEY ||
-  process.env.SUPABASE_ANON_KEY ||
-  "";
-const SUPABASE_TABLE = process.env.SUPABASE_TABLE || "scenarios";
+const SUPABASE_URL = String(supabaseConfig.url || "").trim();
+const SUPABASE_KEY = String(supabaseConfig.key || "").trim();
+const SUPABASE_SCHEMA = String(supabaseConfig.schema || "public").trim() || "public";
+const SUPABASE_TABLE = String(supabaseConfig.table || "scenarios").trim() || "scenarios";
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -77,7 +75,7 @@ async function readScenarios() {
   if (hasSupabaseConfig()) {
     const rows = await supabaseRequest(
       "GET",
-      `/${SUPABASE_TABLE}?select=id,name,created_at,state&order=created_at.desc`
+      `/${getSupabaseTablePath()}?select=id,name,created_at,state&order=created_at.desc`
     );
     return rows.map(normalizeScenarioFromDatabase);
   }
@@ -123,7 +121,7 @@ async function createScenario(payload) {
 
 async function deleteScenario(scenarioId) {
   if (hasSupabaseConfig()) {
-    await supabaseRequest("DELETE", `/${SUPABASE_TABLE}?id=eq.${encodeURIComponent(scenarioId)}`);
+    await supabaseRequest("DELETE", `/${getSupabaseTablePath()}?id=eq.${encodeURIComponent(scenarioId)}`);
     return;
   }
 
@@ -173,6 +171,8 @@ async function supabaseRequest(method, resourcePath, body, extraHeaders = {}) {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
       "Content-Type": "application/json",
+      "Accept-Profile": SUPABASE_SCHEMA,
+      "Content-Profile": SUPABASE_SCHEMA,
       ...extraHeaders
     },
     body: body ? JSON.stringify(body) : undefined
@@ -202,7 +202,7 @@ async function insertScenarioInSupabase(payload) {
   try {
     const rows = await supabaseRequest(
       "POST",
-      `/${SUPABASE_TABLE}`,
+      `/${getSupabaseTablePath()}`,
       record,
       {
         Prefer: "return=representation"
@@ -217,7 +217,7 @@ async function insertScenarioInSupabase(payload) {
 
   const rows = await supabaseRequest(
     "POST",
-    `/${SUPABASE_TABLE}`,
+    `/${getSupabaseTablePath()}`,
     {
       id: createSupabaseNumericId(payload.id),
       ...record
@@ -245,6 +245,10 @@ function createSupabaseNumericId(rawId) {
 function normalizeSavedAt(value) {
   const parsed = Date.parse(value);
   return Number.isNaN(parsed) ? new Date().toISOString() : new Date(parsed).toISOString();
+}
+
+function getSupabaseTablePath() {
+  return SUPABASE_TABLE;
 }
 
 function normalizeScenarioFromDatabase(row) {
