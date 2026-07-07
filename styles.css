@@ -413,12 +413,33 @@ h3 {
 }
 
 .saved-list {
+  --saved-item-height: 140px;
+  --saved-item-gap: 14px;
   margin-top: 18px;
   display: grid;
-  gap: 14px;
+  gap: var(--saved-item-gap);
+  max-height: calc(var(--saved-item-height) * 2 + var(--saved-item-gap));
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-gutter: stable;
+}
+
+.saved-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.saved-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+}
+
+.saved-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
 }
 
 .saved-item {
+  min-height: var(--saved-item-height);
   border-radius: 18px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.05);
